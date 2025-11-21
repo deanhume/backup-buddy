@@ -1,6 +1,5 @@
 ﻿public class BackupBuddyTests
 {
-
     [Fact]
     public void SanitizeFileName_RemovesInvalidCharacters()
     {
@@ -8,7 +7,7 @@
         string unsafeFileName = "test:file<name>with|invalid*chars?.txt";
 
         // Act
-        string safeFileName = Program.SanitizeFileName(unsafeFileName);
+        string safeFileName = Utils.SanitizeFileName(unsafeFileName);
 
         // Assert
         Assert.DoesNotContain(':', safeFileName);
@@ -26,7 +25,7 @@
         string url = "https://example.com/blog/my-awesome-post";
         
         // Act
-        string fileName = Program.CreateFilePath(url);
+        string fileName = Utils.CreateFilePath(url);
         
         // Assert
         Assert.Equal("my-awesome-post", fileName);
@@ -39,7 +38,7 @@
         string url = "https://example.com/";
         
         // Act
-        string fileName = Program.CreateFilePath(url);
+        string fileName = Utils.CreateFilePath(url);
         
         // Assert
         Assert.Equal("index", fileName);
@@ -52,7 +51,7 @@
         string url = "https://example.com/blog/2024/01/my-post";
         
         // Act
-        string fileName = Program.CreateFilePath(url);
+        string fileName = Utils.CreateFilePath(url);
         
         // Assert
         Assert.Equal("my-post", fileName);
@@ -65,7 +64,7 @@
         string url = "https://example.com/blog/my-post/";
         
         // Act
-        string fileName = Program.CreateFilePath(url);
+        string fileName = Utils.CreateFilePath(url);
         
         // Assert
         Assert.Equal("my-post", fileName);
@@ -86,7 +85,7 @@
             </html>";
         
         // Act
-        string markdown = Program.HtmlToMarkdown(html);
+        string markdown = Utils.HtmlToMarkdown(html);
         
         // Assert
         Assert.Contains("Test Article", markdown);
@@ -109,7 +108,7 @@
             </html>";
         
         // Act
-        string markdown = Program.HtmlToMarkdown(html);
+        string markdown = Utils.HtmlToMarkdown(html);
         
         // Assert
         Assert.DoesNotContain("alert", markdown);
@@ -134,7 +133,7 @@
             </html>";
         
         // Act
-        string markdown = Program.HtmlToMarkdown(html);
+        string markdown = Utils.HtmlToMarkdown(html);
         
         // Assert
         Assert.DoesNotContain("Navigation Menu", markdown);
@@ -159,7 +158,7 @@
             </html>";
         
         // Act
-        string markdown = Program.HtmlToMarkdown(html);
+        string markdown = Utils.HtmlToMarkdown(html);
         
         // Assert
         Assert.Contains("Main Content", markdown);
@@ -176,7 +175,7 @@
             </article>";
         
         // Act
-        string markdown = Program.HtmlToMarkdown(html);
+        string markdown = Utils.HtmlToMarkdown(html);
         
         // Assert
         Assert.Contains("this link", markdown);
@@ -195,7 +194,7 @@
             </article>";
         
         // Act
-        string markdown = Program.HtmlToMarkdown(html);
+        string markdown = Utils.HtmlToMarkdown(html);
         
         // Assert
         Assert.Contains("Heading 1", markdown);
@@ -219,7 +218,7 @@
             </html>";
         
         // Act
-        string markdown = Program.HtmlToMarkdown(html);
+        string markdown = Utils.HtmlToMarkdown(html);
         
         // Assert
         Assert.Contains("Post Title", markdown);
@@ -239,7 +238,7 @@
             </html>";
         
         // Act
-        string markdown = Program.HtmlToMarkdown(html);
+        string markdown = Utils.HtmlToMarkdown(html);
         
         // Assert
         Assert.Contains("Title in Body", markdown);
