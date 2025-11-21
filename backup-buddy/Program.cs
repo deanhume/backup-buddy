@@ -1,4 +1,4 @@
-﻿using System.Xml.Linq;
+using System.Xml.Linq;
 using ReverseMarkdown;
 using HtmlAgilityPack;
 
@@ -22,11 +22,6 @@ public class Program
         string sitemapUrl = args[0];
         Console.WriteLine($"Processing sitemap: {sitemapUrl}");
 
-        using var httpClient = new HttpClient(CreateSocketsHttpHandler());
-        httpClient.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36");
-        httpClient.DefaultRequestHeaders.ConnectionClose = false; // Keep connection alive for reuse
-        httpClient.Timeout = TimeSpan.FromSeconds(30);
-
         try
         {
             // Download and parse sitemap
@@ -34,6 +29,7 @@ public class Program
             var startTime = DateTime.Now;
 
             // Use GetStreamAsync and parse directly from stream for better performance
+            using var httpClient = Utils.CreateHttpClient();
             using var stream = await httpClient.GetStreamAsync(sitemapUrl);
             var sitemap = await XDocument.LoadAsync(stream, LoadOptions.None, CancellationToken.None);
 
@@ -87,7 +83,12 @@ public class Program
                     // Download images from the page
                     var imagesDir = Path.Combine(urlDir, "images");
                     Directory.CreateDirectory(imagesDir);
-                    await DownloadImages(html, url, imagesDir, httpClient);
+                    await MediaDownloader.DownloadImages(html, url, imagesDir, httpClient);
+
+                    // Download videos from the page
+                    var videosDir = Path.Combine(urlDir, "videos");
+                    Directory.CreateDirectory(videosDir);
+                    await MediaDownloader.DownloadVideos(html, url, videosDir, httpClient);
 
                     // Save markdown file
                     var markdownPath = Path.Combine(urlDir, $"{fileName}.md");
@@ -117,132 +118,6 @@ public class Program
         catch (Exception ex)
         {
             Console.WriteLine($"Error: {ex.Message}");
-        }
-    }
-
-    /// <summary>
-    /// Creates a socket HTTP Handler and forces IPV4 instead of 6.
-    /// </summary>
-    /// <returns>A socket HTTP Handler.</returns>
-    private static SocketsHttpHandler CreateSocketsHttpHandler()
-    {
-        // IPv6 can cause delays on some Windows systems
-        var handler = new SocketsHttpHandler
-        {
-            ConnectCallback = async (context, cancellationToken) =>
-            {
-                var socket = new System.Net.Sockets.Socket(
-                    System.Net.Sockets.AddressFamily.InterNetwork, // Force IPv4
-                    System.Net.Sockets.SocketType.Stream,
-                    System.Net.Sockets.ProtocolType.Tcp);
-
-                socket.NoDelay = true;
-
-                try
-                {
-                    await socket.ConnectAsync(context.DnsEndPoint, cancellationToken);
-                    return new System.Net.Sockets.NetworkStream(socket, ownsSocket: true);
-                }
-                catch
-                {
-                    socket.Dispose();
-                    throw;
-                }
-            }
-        };
-        return handler;
-    }
-
-    /// <summary>
-    /// Downloads the images from the given URL.
-    /// </summary>
-    /// <param name="html">The HTML page.</param>
-    /// <param name="pageUrl">The URL of the page.</param>
-    /// <param name="imagesDir">The directory to save images to.</param>
-    /// <param name="httpClient">The httpClient object.</param>
-    /// <returns></returns>
-    public static async Task DownloadImages(string html, string pageUrl, string imagesDir, HttpClient httpClient)
-    {
-        var htmlDoc = new HtmlDocument();
-        htmlDoc.LoadHtml(html);
-
-        var imageNodes = htmlDoc.DocumentNode.SelectNodes("//img[@src]");
-        if (imageNodes == null || !imageNodes.Any())
-        {
-            return;
-        }
-
-        var baseUri = new Uri(pageUrl);
-        var downloadedCount = 0;
-
-        // Download images in parallel
-        var imageTasks = imageNodes.Select(async (imgNode, index) =>
-        {
-            try
-            {
-                var src = imgNode.GetAttributeValue("src", "");
-                if (string.IsNullOrEmpty(src)) return false;
-
-                // Convert relative URLs to absolute
-                Uri? imageUri = null;
-                if (!Uri.TryCreate(src, UriKind.Absolute, out imageUri))
-                {
-                    if (!Uri.TryCreate(baseUri, src, out imageUri))
-                    {
-                        return false;
-                    }
-                }
-
-                // Download image
-                var imageBytes = await httpClient.GetByteArrayAsync(imageUri);
-
-                // Create safe filename from URL
-                var imageName = Path.GetFileName(imageUri.LocalPath);
-                if (string.IsNullOrEmpty(imageName))
-                {
-                    // Try to detect extension from URL query parameters or default to .jpg
-                    var extension = Path.GetExtension(imageUri.AbsoluteUri.Split('?')[0]);
-                    if (string.IsNullOrEmpty(extension))
-                    {
-                        extension = ".jpg";
-                    }
-                    imageName = $"image_{index}{extension}";
-                }
-                else if (string.IsNullOrEmpty(Path.GetExtension(imageName)))
-                {
-                    // If filename exists but has no extension, try to detect from URL or default to .jpg
-                    var extension = Path.GetExtension(imageUri.AbsoluteUri.Split('?')[0]);
-                    if (string.IsNullOrEmpty(extension))
-                    {
-                        extension = ".jpg";
-                    }
-                    imageName = $"{imageName}{extension}";
-                }
-
-                // Sanitize filename
-                foreach (var c in Path.GetInvalidFileNameChars())
-                {
-                    imageName = imageName.Replace(c, '_');
-                }
-
-                var imagePath = Path.Combine(imagesDir, imageName);
-                await File.WriteAllBytesAsync(imagePath, imageBytes);
-                return true;
-            }
-            catch (Exception ex)
-            {
-                // Continue on error for individual images
-                Console.WriteLine($"    ⚠ Could not download image: {ex.Message}");
-                return false;
-            }
-        });
-
-        var results = await Task.WhenAll(imageTasks);
-        downloadedCount = results.Count(r => r);
-
-        if (downloadedCount > 0)
-        {
-            Console.WriteLine($"  ✓ Downloaded {downloadedCount} images");
         }
     }
 }

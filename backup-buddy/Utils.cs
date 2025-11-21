@@ -80,4 +80,51 @@ public class Utils
 
         return fileName;
     }
+
+    /// <summary>
+    /// Creates a socket HTTP Handler and forces IPV4 instead of 6.
+    /// </summary>
+    /// <returns>A socket HTTP Handler.</returns>
+    private static SocketsHttpHandler CreateSocketsHttpHandler()
+    {
+        // IPv6 can cause delays on some Windows systems
+        var handler = new SocketsHttpHandler
+        {
+            ConnectCallback = async (context, cancellationToken) =>
+            {
+                var socket = new System.Net.Sockets.Socket(
+                    System.Net.Sockets.AddressFamily.InterNetwork, // Force IPv4
+                    System.Net.Sockets.SocketType.Stream,
+                    System.Net.Sockets.ProtocolType.Tcp);
+
+                socket.NoDelay = true;
+
+                try
+                {
+                    await socket.ConnectAsync(context.DnsEndPoint, cancellationToken);
+                    return new System.Net.Sockets.NetworkStream(socket, ownsSocket: true);
+                }
+                catch
+                {
+                    socket.Dispose();
+                    throw;
+                }
+            }
+        };
+        return handler;
+    }
+
+    /// <summary>
+    /// Creates and configures an HttpClient instance.
+    /// </summary>
+    /// <returns>An HttpClient instance.</returns>
+    public static HttpClient CreateHttpClient()
+    {
+        using var httpClient = new HttpClient(CreateSocketsHttpHandler());
+        httpClient.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36");
+        httpClient.DefaultRequestHeaders.ConnectionClose = false; // Keep connection alive for reuse
+        httpClient.Timeout = TimeSpan.FromSeconds(30);
+
+        return httpClient;
+    }
 }
