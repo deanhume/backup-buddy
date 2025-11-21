@@ -5,6 +5,8 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "backup-buddy", "backup-buddy\backup-buddy.csproj", "{387A6675-8D61-49C9-B4E2-7E59DF9DDE8A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "backup-buddy.tests", "backup-buddy.tests\backup-buddy.tests.csproj", "{2DBEDFC7-E8AA-43B6-8CD1-98780826C2E6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,18 @@ Global
 		{387A6675-8D61-49C9-B4E2-7E59DF9DDE8A}.Release|x64.Build.0 = Release|Any CPU
 		{387A6675-8D61-49C9-B4E2-7E59DF9DDE8A}.Release|x86.ActiveCfg = Release|Any CPU
 		{387A6675-8D61-49C9-B4E2-7E59DF9DDE8A}.Release|x86.Build.0 = Release|Any CPU
+		{2DBEDFC7-E8AA-43B6-8CD1-98780826C2E6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2DBEDFC7-E8AA-43B6-8CD1-98780826C2E6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2DBEDFC7-E8AA-43B6-8CD1-98780826C2E6}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{2DBEDFC7-E8AA-43B6-8CD1-98780826C2E6}.Debug|x64.Build.0 = Debug|Any CPU
+		{2DBEDFC7-E8AA-43B6-8CD1-98780826C2E6}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{2DBEDFC7-E8AA-43B6-8CD1-98780826C2E6}.Debug|x86.Build.0 = Debug|Any CPU
+		{2DBEDFC7-E8AA-43B6-8CD1-98780826C2E6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2DBEDFC7-E8AA-43B6-8CD1-98780826C2E6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2DBEDFC7-E8AA-43B6-8CD1-98780826C2E6}.Release|x64.ActiveCfg = Release|Any CPU
+		{2DBEDFC7-E8AA-43B6-8CD1-98780826C2E6}.Release|x64.Build.0 = Release|Any CPU
+		{2DBEDFC7-E8AA-43B6-8CD1-98780826C2E6}.Release|x86.ActiveCfg = Release|Any CPU
+		{2DBEDFC7-E8AA-43B6-8CD1-98780826C2E6}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

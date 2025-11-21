@@ -2,7 +2,7 @@
 using ReverseMarkdown;
 using HtmlAgilityPack;
 
-internal static class Program
+public static class Program
 {
     /// <summary>
     /// Main entry point for the blog backup tool.
