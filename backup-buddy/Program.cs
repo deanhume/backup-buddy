@@ -22,9 +22,10 @@ public class Program
         string sitemapUrl = args[0];
         Console.WriteLine($"Processing sitemap: {sitemapUrl}");
 
-        var httpClient = new HttpClient(CreateSocketsHttpHandler());
+        using var httpClient = new HttpClient(CreateSocketsHttpHandler());
         httpClient.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36");
         httpClient.DefaultRequestHeaders.ConnectionClose = false; // Keep connection alive for reuse
+        httpClient.Timeout = TimeSpan.FromSeconds(30);
 
         try
         {
