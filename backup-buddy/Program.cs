@@ -199,7 +199,23 @@ public class Program
                 var imageName = Path.GetFileName(imageUri.LocalPath);
                 if (string.IsNullOrEmpty(imageName))
                 {
-                    imageName = $"image_{index}.jpg";
+                    // Try to detect extension from URL query parameters or default to .jpg
+                    var extension = Path.GetExtension(imageUri.AbsoluteUri.Split('?')[0]);
+                    if (string.IsNullOrEmpty(extension))
+                    {
+                        extension = ".jpg";
+                    }
+                    imageName = $"image_{index}{extension}";
+                }
+                else if (string.IsNullOrEmpty(Path.GetExtension(imageName)))
+                {
+                    // If filename exists but has no extension, try to detect from URL or default to .jpg
+                    var extension = Path.GetExtension(imageUri.AbsoluteUri.Split('?')[0]);
+                    if (string.IsNullOrEmpty(extension))
+                    {
+                        extension = ".jpg";
+                    }
+                    imageName = $"{imageName}{extension}";
                 }
 
                 // Sanitize filename
