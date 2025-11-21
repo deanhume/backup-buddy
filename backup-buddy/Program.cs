@@ -2,14 +2,14 @@
 using ReverseMarkdown;
 using HtmlAgilityPack;
 
-public static class Program
+public class Program
 {
     /// <summary>
     /// Main entry point for the blog backup tool.
     /// Processes a sitemap.xml file and downloads all URLs as markdown with images.
     /// </summary>
     /// <param name="args">Command line arguments (sitemap URL).</param>
-    private static async Task Main(string[] args)
+    public static async Task Main(string[] args)
     {
 
         if (args.Length == 0)
@@ -75,11 +75,7 @@ public static class Program
                     var markdown = HtmlToMarkdown(html);
 
                     // Create a safe filename from the URL
-                    var uri = new Uri(url);
-                    var pathSegments = uri.AbsolutePath.Trim('/').Split('/');
-                    var fileName = pathSegments.Length > 0 && !string.IsNullOrEmpty(pathSegments[^1])
-                        ? pathSegments[^1]
-                        : "index";
+                    string fileName = CreateFilePath(url);
 
                     fileName = SanitizeFileName(fileName);
 
@@ -121,6 +117,21 @@ public static class Program
         {
             Console.WriteLine($"Error: {ex.Message}");
         }
+    }
+
+    /// <summary>
+    /// Creates a file path from a URL by extracting the last segment or using "index" if empty.
+    /// </summary>
+    /// <param name="url"></param>
+    /// <returns></returns>
+    public static string CreateFilePath(string url)
+    {
+        var uri = new Uri(url);
+        var pathSegments = uri.AbsolutePath.Trim('/').Split('/');
+        var fileName = pathSegments.Length > 0 && !string.IsNullOrEmpty(pathSegments[^1])
+            ? pathSegments[^1]
+            : "index";
+        return fileName;
     }
 
     /// <summary>
@@ -178,7 +189,7 @@ public static class Program
     /// </summary>
     /// <param name="html">The HTML content to convert.</param>
     /// <returns>Markdown formatted string.</returns>
-    private static string HtmlToMarkdown(string html)
+    public static string HtmlToMarkdown(string html)
     {
         // Load HTML document
         var htmlDoc = new HtmlDocument();
@@ -228,7 +239,7 @@ public static class Program
     /// <param name="imagesDir">The directory to save images to.</param>
     /// <param name="httpClient">The httpClient object.</param>
     /// <returns></returns>
-    private static async Task DownloadImages(string html, string pageUrl, string imagesDir, HttpClient httpClient)
+    public static async Task DownloadImages(string html, string pageUrl, string imagesDir, HttpClient httpClient)
     {
         var htmlDoc = new HtmlDocument();
         htmlDoc.LoadHtml(html);
