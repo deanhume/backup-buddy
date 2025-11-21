@@ -10,12 +10,14 @@
         string safeFileName = Utils.SanitizeFileName(unsafeFileName);
 
         // Assert
-        Assert.DoesNotContain(':', safeFileName);
-        Assert.DoesNotContain('<', safeFileName);
-        Assert.DoesNotContain('>', safeFileName);
-        Assert.DoesNotContain('|', safeFileName);
-        Assert.DoesNotContain('*', safeFileName);
-        Assert.DoesNotContain('?', safeFileName);
+        var invalidChars = Path.GetInvalidFileNameChars();
+        foreach (var invalidChar in invalidChars)
+        {
+            Assert.DoesNotContain(invalidChar, safeFileName);
+        }
+        
+        // Verify that invalid characters were replaced with underscore
+        Assert.Contains('_', safeFileName);
     }
 
     [Fact]
