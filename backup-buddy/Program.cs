@@ -81,7 +81,7 @@ internal static class Program
                         ? pathSegments[^1]
                         : "index";
 
-                    fileName = NewMethod(fileName);
+                    fileName = SanitizeFileName(fileName);
 
                     // Create directory structure for this URL
                     var urlDir = Path.Combine(outputDir, $"{index + 1}_{fileName}");
