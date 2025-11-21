@@ -1,4 +1,5 @@
 <img src="./logo.png" width=400>
+
 # Backup Buddy
 ![Github Actions Status](https://github.com/deanhume/backup-buddy/actions/workflows/dotnet.yml/badge.svg)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE.md)
