@@ -81,11 +81,7 @@ internal static class Program
                         ? pathSegments[^1]
                         : "index";
 
-                    // Sanitize filename to remove invalid characters
-                    foreach (var c in Path.GetInvalidFileNameChars())
-                    {
-                        fileName = fileName.Replace(c, '_');
-                    }
+                    fileName = NewMethod(fileName);
 
                     // Create directory structure for this URL
                     var urlDir = Path.Combine(outputDir, $"{index + 1}_{fileName}");
@@ -125,6 +121,22 @@ internal static class Program
         {
             Console.WriteLine($"Error: {ex.Message}");
         }
+    }
+
+    /// <summary>
+    /// Sanitizes the file name by replacing invalid characters.
+    /// </summary>
+    /// <param name="fileName">The filename</param>
+    /// <returns></returns>
+    public static string SanitizeFileName(string fileName)
+    {
+        // Sanitize filename to remove invalid characters
+        foreach (var c in Path.GetInvalidFileNameChars())
+        {
+            fileName = fileName.Replace(c, '_');
+        }
+
+        return fileName;
     }
 
     /// <summary>

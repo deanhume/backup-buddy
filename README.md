@@ -14,10 +14,6 @@ A powerful .NET command-line tool that backs up websites by converting HTML page
 - 🔄 **Connection Reuse** - Optimized HTTP client configuration for better performance
 - 📊 **Progress Tracking** - Real-time progress updates during backup process
 
-## Requirements
-
-- [.NET 9.0 SDK](https://dotnet.microsoft.com/download/dotnet/9.0) or later
-
 ## Installation
 
 ### Build from Source
@@ -99,16 +95,6 @@ Each page directory contains:
 6. **Image Download** - Downloads all images and saves them locally
 7. **File Organization** - Creates organized directories with metadata
 
-## Configuration
-
-### Adjusting Parallelism
-
-The default parallelism is set to 10 concurrent requests. To adjust this, modify line 56 in `Program.cs`:
-
-```csharp
-var maxParallelism = 10; // Increase for larger websites
-```
-
 ## Limitations
 
 - Only processes URLs listed in the sitemap
@@ -135,9 +121,6 @@ This project is open source and available under the [MIT License](LICENSE).
 - [ ] Support for sitemap index files
 - [ ] Custom output format options
 - [ ] Progress bar visualization
-- [ ] Resume interrupted downloads
-- [ ] Configuration file support
-- [ ] Docker container
 - [ ] Video and other media download support
 
 ---
