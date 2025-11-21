@@ -3,8 +3,9 @@
     [Fact]
     public void SanitizeFileName_RemovesInvalidCharacters()
     {
-        // Arrange
-        string unsafeFileName = "test:file<name>with|invalid*chars?.txt";
+        // Arrange - use characters that are definitely invalid on all platforms
+        // Forward slash '/' is invalid on all platforms
+        string unsafeFileName = "test/file\\name.txt";
 
         // Act
         string safeFileName = Utils.SanitizeFileName(unsafeFileName);
@@ -16,8 +17,35 @@
             Assert.DoesNotContain(invalidChar, safeFileName);
         }
         
-        // Verify that invalid characters were replaced with underscore
+        // Verify the function actually replaced something
+        Assert.NotEqual(unsafeFileName, safeFileName);
         Assert.Contains('_', safeFileName);
+    }
+
+    [Fact]
+    public void SanitizeFileName_HandlesEmptyString()
+    {
+        // Arrange
+        string emptyFileName = "";
+        
+        // Act
+        string result = Utils.SanitizeFileName(emptyFileName);
+        
+        // Assert
+        Assert.Equal("", result);
+    }
+
+    [Fact]
+    public void SanitizeFileName_HandlesValidFileName()
+    {
+        // Arrange
+        string validFileName = "valid-file_name123.txt";
+        
+        // Act
+        string result = Utils.SanitizeFileName(validFileName);
+        
+        // Assert
+        Assert.Equal(validFileName, result);
     }
 
     [Fact]
