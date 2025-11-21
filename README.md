@@ -1,5 +1,8 @@
-# Backup Buddy
 <img src="./logo.png" width=400>
+
+# Backup Buddy
+![Github Actions Status](https://github.com/deanhume/backup-buddy/actions/workflows/dotnet.yml/badge.svg)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE.md)
 
 A powerful .NET command-line tool that backs up websites by converting HTML pages to Markdown format with images. Perfect for archiving blogs, documentation sites, or any web content you want to preserve in a portable, readable format.
 
