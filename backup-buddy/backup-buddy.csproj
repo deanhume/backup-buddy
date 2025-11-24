@@ -6,7 +6,13 @@
     <RootNamespace>backup_buddy</RootNamespace>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <SignAssembly>False</SignAssembly>
+    <ApplicationIcon>backup-buddy.ico</ApplicationIcon>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="backup-buddy.ico" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="ReverseMarkdown" Version="4.7.1" />

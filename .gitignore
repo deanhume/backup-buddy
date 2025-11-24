@@ -55,3 +55,9 @@ nunit-*.xml
 
 # Output directory for blog backup tool
 output/
+blog-post.md
+/.vs/backup-buddy/CopilotIndices
+/.vs/backup-buddy/DesignTimeBuild
+/.vs/backup-buddy/FileContentIndex
+/.vs/backup-buddy/v17
+/.vs/ProjectEvaluation
