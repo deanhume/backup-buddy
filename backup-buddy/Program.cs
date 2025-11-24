@@ -11,7 +11,6 @@ public class Program
     /// <param name="args">Command line arguments (sitemap URL).</param>
     public static async Task Main(string[] args)
     {
-
         if (args.Length == 0)
         {
             Console.WriteLine("Usage: backup-buddy <sitemap-url>");
@@ -108,7 +107,7 @@ public class Program
                 {
                     semaphore.Release(); // Allow next request to proceed
                 }
-            });
+            }).ToList(); // Force immediate execution
 
             await Task.WhenAll(tasks);
 

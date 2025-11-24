@@ -120,7 +120,7 @@ public class Utils
     /// <returns>An HttpClient instance.</returns>
     public static HttpClient CreateHttpClient()
     {
-        using var httpClient = new HttpClient(CreateSocketsHttpHandler());
+        var httpClient = new HttpClient(CreateSocketsHttpHandler());
         httpClient.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36");
         httpClient.DefaultRequestHeaders.ConnectionClose = false; // Keep connection alive for reuse
         httpClient.Timeout = TimeSpan.FromSeconds(30);
